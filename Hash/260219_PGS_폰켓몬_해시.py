@@ -1,3 +1,5 @@
+# https://school.programmers.co.kr/learn/courses/30/lessons/1845
+
 def solution(nums):
     nums_to_sele = len(nums) / 2
     uniq_nums = list(set(nums))

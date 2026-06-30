@@ -1,11 +1,13 @@
+# https://school.programmers.co.kr/learn/courses/30/lessons/42576
+
 def solution(participant, completion):
-#     # 1번 풀이: sorting/loop -> 32.65ms / 17MB
-#     participant.sort()
-#     completion.sort()
-#     for i in range(len(completion)):
-#         if participant[i] != completion[i]:
-#             return participant[i]
-#     return participant[-1]
+    # 1번 풀이: sorting/loop -> 32.65ms / 17MB
+    participant.sort()
+    completion.sort()
+    for i in range(len(completion)):
+        if participant[i] != completion[i]:
+            return participant[i]
+    return participant[-1]
 
 
 #     # 2번 풀이: hash -> 23.72ms / 23MB

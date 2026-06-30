@@ -1,3 +1,5 @@
+# https://school.programmers.co.kr/learn/courses/30/lessons/43162
+
 # 기존 풀이
 '''
 def solution(n, computers):
