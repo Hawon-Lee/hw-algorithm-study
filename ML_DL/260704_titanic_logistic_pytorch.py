@@ -88,7 +88,7 @@ def solution(df):
 
     # 7번
     plt.plot(loss_ls)
-    plt.savefig("260704_titanic_logistic_pytorch_loss.png")
+    plt.savefig("outputs/260704_titanic_logistic_pytorch_loss.png")
 
     return accuracy
 
