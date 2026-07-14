@@ -15,6 +15,7 @@
 # 5. 100 epoch 학습시키세요. (Adam, lr=1e-3)
 # 6. test set에 대한 평균 재구성 손실(reconstruction loss만, KL 제외)을 반환하세요.
 
+import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 import torch
@@ -26,6 +27,22 @@ from sklearn.datasets import load_digits
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.model_selection import train_test_split
 
+def visualize_reconstruction(X_ts, X_ts_pred, n_show=8, save_path="vae_reconstruction.png"):
+    originals = X_ts[:n_show].cpu().numpy()
+    recons = X_ts_pred[:n_show].cpu().numpy()
+
+    fig, axes = plt.subplots(2, n_show, figsize=(n_show * 1.5, 3))
+    for i in range(n_show):
+        axes[0, i].imshow(originals[i].reshape(8, 8), cmap="gray")
+        axes[0, i].axis("off")
+        axes[1, i].imshow(recons[i].reshape(8, 8), cmap="gray")
+        axes[1, i].axis("off")
+
+    axes[0, 0].set_title("original", loc="left", fontsize=9)
+    axes[1, 0].set_title("reconstructed", loc="left", fontsize=9)
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=150)
+    plt.close()
 
 class VAE(nn.Module):
     def __init__(self, input_dim, h1, h2):
@@ -139,9 +156,9 @@ def solution():
     with torch.no_grad():
         X_ts_pred, _, _ = model(X_ts)
         avg_recon_loss = test_bce_criterion(X_ts_pred, X_ts)
-
-    return avg_recon_loss
+    return avg_recon_loss, X_ts, X_ts_pred
 
 if __name__ == "__main__":
-    result = solution()
+    result, X_ts, X_ts_pred = solution()
     print(f"Avg reconstruction loss: {result:.4f}")
+    visualize_reconstruction(X_ts, X_ts_pred, save_path="outputs/260714_VAE_reconstruction.png")
