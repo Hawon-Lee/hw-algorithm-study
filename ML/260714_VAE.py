@@ -27,23 +27,6 @@ from sklearn.datasets import load_digits
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.model_selection import train_test_split
 
-def visualize_reconstruction(X_ts, X_ts_pred, n_show=8, save_path="vae_reconstruction.png"):
-    originals = X_ts[:n_show].cpu().numpy()
-    recons = X_ts_pred[:n_show].cpu().numpy()
-
-    fig, axes = plt.subplots(2, n_show, figsize=(n_show * 1.5, 3))
-    for i in range(n_show):
-        axes[0, i].imshow(originals[i].reshape(8, 8), cmap="gray")
-        axes[0, i].axis("off")
-        axes[1, i].imshow(recons[i].reshape(8, 8), cmap="gray")
-        axes[1, i].axis("off")
-
-    axes[0, 0].set_title("original", loc="left", fontsize=9)
-    axes[1, 0].set_title("reconstructed", loc="left", fontsize=9)
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=150)
-    plt.close()
-
 class VAE(nn.Module):
     def __init__(self, input_dim, h1, h2):
         super().__init__()
@@ -69,7 +52,7 @@ class VAE(nn.Module):
         # sampling
         std = torch.exp(0.5 * logvar)
         eps = torch.randn(std.size()).to(mu.device)
-        latent = mu + eps * std
+        latent = mu + eps * std # latent space (정규분포이길 바라는) 에서 샘플링
 
         # decoding
         out = self.dec_1(latent)
@@ -78,6 +61,7 @@ class VAE(nn.Module):
         out = self.sigmoid(out)
 
         return out, mu, logvar
+
 
 class CustomDataset(Dataset):
     def __init__(self, X, y):
@@ -90,6 +74,7 @@ class CustomDataset(Dataset):
 
     def __len__(self):
         return len(self.X)
+
 
 def solution():
     # 변수 정의
@@ -157,6 +142,25 @@ def solution():
         X_ts_pred, _, _ = model(X_ts)
         avg_recon_loss = test_bce_criterion(X_ts_pred, X_ts)
     return avg_recon_loss, X_ts, X_ts_pred
+
+
+def visualize_reconstruction(X_ts, X_ts_pred, n_show=8, save_path="vae_reconstruction.png"):
+    originals = X_ts[:n_show].cpu().numpy()
+    recons = X_ts_pred[:n_show].cpu().numpy()
+
+    fig, axes = plt.subplots(2, n_show, figsize=(n_show * 1.5, 3))
+    for i in range(n_show):
+        axes[0, i].imshow(originals[i].reshape(8, 8), cmap="gray")
+        axes[0, i].axis("off")
+        axes[1, i].imshow(recons[i].reshape(8, 8), cmap="gray")
+        axes[1, i].axis("off")
+
+    axes[0, 0].set_title("original", loc="left", fontsize=9)
+    axes[1, 0].set_title("reconstructed", loc="left", fontsize=9)
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=150)
+    plt.close()
+
 
 if __name__ == "__main__":
     result, X_ts, X_ts_pred = solution()

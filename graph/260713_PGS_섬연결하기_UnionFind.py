@@ -14,7 +14,7 @@ def solution(n, costs):
     for n1, n2, cost in sorted_costs:
         n1 = find(n1) # find root node
         n2 = find(n2)
-        if n1 == n2: # two nodes alread in same group
+        if n1 == n2: # two nodes are already in the same group
             continue
         if n1 < n2:
             parent[n2] = n1
